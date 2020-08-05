@@ -42,7 +42,7 @@
         self.progressBlock = progressBlock;
         self.completedBlock = completedBlock;
         NSURLSessionConfiguration * sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        sessionConfiguration.timeoutIntervalForRequest = 15.0;
+        sessionConfiguration.timeoutIntervalForRequest = 60.0;
         self.session = [NSURLSession sessionWithConfiguration:sessionConfiguration
                                                      delegate:self
                                                 delegateQueue:queue];
@@ -137,9 +137,7 @@ didFinishDownloadingToURL:(NSURL *)location {
 didFinishDownloadingToURL:(NSURL *)location {
     NSError *error=nil;
     NSURL *toURL = [NSURL fileURLWithPath:[XHLaunchAdCache videoPathWithURL:self.url]];
-
-    [[NSFileManager defaultManager] copyItemAtURL:location toURL:toURL error:&error];//复制到缓存目录
-
+    [[NSFileManager defaultManager] copyItemAtURL:location toURL:toURL error:&error];
     if(error)  XHLaunchAdLog(@"error = %@",error);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.completedBlock) {
@@ -278,7 +276,9 @@ didFinishDownloadingToURL:(NSURL *)location {
         if(error){
             if(completedBlock) completedBlock(NO);
         }else{
-            if(completedBlock) completedBlock(YES);
+            [XHLaunchAdCache async_saveVideoAtLocation:location URL:url completed:^(BOOL result, NSURL * _Nonnull URL) {
+                if(completedBlock) completedBlock(result);
+            }];
         }
     }];
 }

@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, XHLaunchAdType) {
 };
 
 static NSInteger defaultWaitDataDuration = 3;
-static  SourceType _sourceType = SourceTypeLaunchImage;
+static  SourceType _sourceType = SourceTypeLaunchScreen;
 @interface XHLaunchAd()
 
 @property(nonatomic,assign)XHLaunchAdType launchAdType;
@@ -204,7 +204,7 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
     window.rootViewController = [XHLaunchAdController new];
     window.rootViewController.view.backgroundColor = [UIColor clearColor];
     window.rootViewController.view.userInteractionEnabled = NO;
-    window.windowLevel = UIWindowLevelStatusBar + 1;
+    window.windowLevel = UIWindowLevelStatusBar +1;
     window.hidden = NO;
     window.alpha = 1;
     _window = window;
@@ -303,7 +303,7 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
         if(_skipButton == nil){
             _skipButton = [[XHLaunchAdButton alloc] initWithSkipType:configuration.skipButtonType];
             _skipButton.hidden = YES;
-            [_skipButton addTarget:self action:@selector(skipButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+            [_skipButton addTarget:self action:@selector(skipButtonClick) forControlEvents:UIControlEventTouchUpInside];
         }
         [_window addSubview:_skipButton];
         [_skipButton setTitleWithSkipType:configuration.skipButtonType duration:configuration.duration];
@@ -430,10 +430,7 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
 }
 
 #pragma mark - Action
--(void)skipButtonClick:(XHLaunchAdButton *)button{
-    if ([self.delegate respondsToSelector:@selector(xhLaunchAd:clickSkipButton:)]) {
-        [self.delegate xhLaunchAd:self clickSkipButton:button];
-    }
+-(void)skipButtonClick{
     [self removeAndAnimated:YES];
 }
 
@@ -458,14 +455,10 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
         [self.delegate xhLaunchAd:self clickAndOpenURLString:configuration.openURLString clickPoint:point];
         [self removeAndAnimateDefault];
     }
+#pragma clang diagnostic pop
     if ([self.delegate respondsToSelector:@selector(xhLaunchAd:clickAndOpenModel:clickPoint:)]) {
         [self.delegate xhLaunchAd:self clickAndOpenModel:configuration.openModel clickPoint:point];
         [self removeAndAnimateDefault];
-    }
-#pragma clang diagnostic pop
-    if ([self.delegate respondsToSelector:@selector(xhLaunchAd:clickAtOpenModel:clickPoint:)]) {
-        BOOL status =  [self.delegate xhLaunchAd:self clickAtOpenModel:configuration.openModel clickPoint:point];
-        if(status) [self removeAndAnimateDefault];
     }
 }
 

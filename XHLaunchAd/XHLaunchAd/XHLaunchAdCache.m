@@ -287,7 +287,13 @@
 }
 
 +(NSString *)keyWithURL:(NSURL *)url{
-    return [self md5String:url.absoluteString];
+    if ([url.absoluteString containsString:@"?"]) {
+       
+        return [self md5String:[[url.absoluteString componentsSeparatedByString:@"?"] firstObject]];
+    }else{
+        return [self md5String:url.absoluteString];
+    }
+    
 }
 
 @end

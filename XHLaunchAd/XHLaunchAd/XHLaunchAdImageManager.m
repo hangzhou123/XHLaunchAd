@@ -46,7 +46,7 @@
         if(image && completedBlock) completedBlock(image,imageData,nil,url);
         [_downloader downloadImageWithURL:url progress:progressBlock completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error) {
             if(completedBlock) completedBlock(image,data,error,url);
-            [XHLaunchAdCache async_saveImageData:data imageURL:url completed:nil];
+            [XHLaunchAdCache async_saveImageData:data imageURL:url.lastPathComponent completed:nil];
         }];
     }else if (options & XHLaunchAdImageCacheInBackground){
         NSData *imageData = [XHLaunchAdCache getCacheImageDataWithURL:url];
